@@ -1,0 +1,27 @@
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      const apikey= "a2c1c1deee983beea51e25b0f6e63796";
+      const url=`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apikey}`;
+      try{
+        const response=await fetch(url);
+        const weatherdata=await response.json();
+        console.log(`weatherData: `, weatherdata);
+        const info={
+            latitude: latitude,
+            longitude: longitude
+        };
+        localStorage.setItem("weather",JSON.stringify(info));
+        console.log(`stored in local storage: `, info);
+      }catch(error){
+            console.log(`Error`,error);
+      }
+    },
+    error => console.error("Error obtaining location", error)
+  );
+} else {
+  console.error("Geolocation is not supported by this browser.");
+}
